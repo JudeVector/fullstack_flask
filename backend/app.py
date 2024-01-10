@@ -9,14 +9,14 @@ app.config["SQLALCHEMY_DATABASE_URI"] = environ.get("DATABASE_URL")
 db = SQLAlchemy(app)
 
 
-class User(db.Model):
-    __tablename__ = "users"
+class Topic(db.Model):
+    __tablename__ = "topics"
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(80), unique=True, nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
+    title = db.Column(db.String(120))
+    description = db.Column(db.String(120))
 
     def json(self):
-        return {"id": self.id, "name": self.name, "email": self.email}
+        return {"id": self.id, "title": self.title, "description": self.description}
 
 
 db.create_all()
@@ -29,36 +29,40 @@ def test():
 
 
 # Create a user route
-@app.route("/api/flask/users", methods=["POST"])
-def create_user():
+@app.route("/api/v1/topics", methods=["POST"])
+def create_topic():
     try:
         data = request.get_json()
-        new_user = User(name=data["name"], email=data["email"])
-        db.session.add(new_user)
+        new_topic = Topic(title=data["title"], description=data["description"])
+        db.session.add(new_topic)
         db.session.commit()
 
         return (
             jsonify(
-                {"id": new_user.id, "name": new_user.name, "email": new_user.email}
+                {
+                    "id": new_topic.id,
+                    "title": new_topic.title,
+                    "description": new_topic.description,
+                }
             ),
             201,
         )
     except Exception as e:
         return make_response(
-            jsonify({"message": "Error creating user", "error": str(e)}), 500
+            jsonify({"message": "Error creating topics", "error": str(e)}), 500
         )
 
 
 # Get all users
-@app.route("/api/flask/users", methods=["GET"])
-def get_user():
+@app.route("/api/v1/topics", methods=["GET"])
+def get_topic():
     try:
-        users = User.query.all()
-        users_data = [
-            {"id": users.id, "name": users.name, "email": users.email}
-            for users in users
+        topics = Topic.query.all()
+        topics_data = [
+            {"id": topics.id, "title": topics.title, "description": topics.description}
+            for topics in topics
         ]
-        return jsonify(users_data), 200
+        return jsonify(topics_data), 200
     except Exception as e:
         return make_response(
             jsonify({"message": "Error getting users", "error": str(e)}), 500
@@ -66,13 +70,13 @@ def get_user():
 
 
 # Get a user by id
-@app.route("/api/flask/users/<id>", methods=["GET"])
-def get_user_id(id):
+@app.route("/api/v1/topics/<id>", methods=["GET"])
+def get_topic_id(id):
     try:
-        user = User.query.filter_by(id=id).first()
-        if user:
-            return make_response(jsonify({"user": user.json()}), 200)
-        return make_response(jsonify({"message": "User not found"}), 404)
+        topic = Topic.query.filter_by(id=id).first()
+        if topic:
+            return make_response(jsonify({"topic": topic.json()}), 200)
+        return make_response(jsonify({"message": "Topic not found"}), 404)
     except Exception as e:
         return make_response(
             jsonify({"message": "Internal Server Error", "error": str(e)}), 500
@@ -80,17 +84,17 @@ def get_user_id(id):
 
 
 # Update user by id
-@app.route("/api/flask/update<id>", methods=["PUT"])
-def update_user(id):
+@app.route("/api/v1/topics/<id>", methods=["PUT"])
+def update_topic(id):
     try:
-        user = User.query.filter_by(id=id).first()
-        if user:
+        topic = Topic.query.filter_by(id=id).first()
+        if topic:
             data = request.get_json()
-            user.name = data["name"]
-            user.email = data["email"]
+            topic.title = data["title"]
+            topic.description = data["description"]
             db.session.commit()
-            return make_response(jsonify({"message": "user updated"}), 200)
-        return make_response(jsonify({"message": "user not found"}), 404)
+            return make_response(jsonify({"message": "topic updated"}), 200)
+        return make_response(jsonify({"message": "topic not found"}), 404)
     except Exception as e:
         return make_response(
             jsonify({"message": "Internal Server Error", "error": str(e)}), 500
@@ -98,15 +102,17 @@ def update_user(id):
 
 
 # Delete a user
-@app.route("/api/flask/delete<id>", methods=["DELETE"])
-def delete_user(id):
+@app.route("/api/v1/topics/<id>", methods=["DELETE"])
+def delete_topic(id):
     try:
-        user = User.query.filter_by(id=id).first()
-        if user:
-            db.session.delete(user)
+        topic = Topic.query.filter_by(id=id).first()
+        if topic:
+            db.session.delete(topic)
             db.session.commit()
-            return make_response(jsonify({"message": "User deleted successfully"}), 200)
-        return make_response(jsonify({"message": "User not found"}), 404)
+            return make_response(
+                jsonify({"message": "Topic deleted successfully"}), 200
+            )
+        return make_response(jsonify({"message": "Topic not found"}), 404)
     except Exception as e:
         return make_response(
             jsonify({"message": "Internal Server Error", "error": str(e)}), 500
