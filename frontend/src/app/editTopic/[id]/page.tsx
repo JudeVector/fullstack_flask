@@ -1,19 +1,36 @@
-import React from "react";
+import EditTopicForm from "@/components/EditTopicForm";
+import axios from "axios";
 
-const page = () => {
-  return (
-    <form className="flex flex-col gap-3">
-      <input className="border border-slate-500 px-8 py-2" type="text" placeholder="Topic Title" />
+const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
 
-      <input
-        className="border border-slate-500 px-8 py-2"
-        type="text"
-        placeholder="Topic Description"
-      />
+const getTopicById = async (id: any) => {
+  try {
+    const res = await axios.get(`${apiUrl}/api/v1/topics/${id}`, {
+      headers: {
+        "Cache-Control": "no-store",
+      },
+    });
 
-      <button className=" bg-green-600 font-bold text-white py-3 px-6 w-fit">Update Topic</button>
-    </form>
-  );
+    if (!res.data) {
+      throw new Error("Failed to fetch topic");
+    }
+    return res.data;
+  } catch (error) {
+    console.error("Error loading topic", error);
+    throw error;
+  }
 };
 
-export default page;
+const editTopic = async ({ params }) => {
+  const { id } = params;
+
+  const topic = await getTopicById(id);
+
+  const {
+    topic: { title, description },
+  } = topic;
+
+  return <EditTopicForm id={id} title={title} description={description} />;
+};
+
+export default editTopic;
