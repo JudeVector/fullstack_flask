@@ -4,7 +4,7 @@ import axios from "axios";
 import { HiOutlineTrash } from "react-icons/hi";
 import { useRouter } from "next/navigation";
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
 const RemoveBtn = ({ id }: any) => {
   const router = useRouter();

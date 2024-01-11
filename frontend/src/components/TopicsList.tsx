@@ -4,7 +4,7 @@ import Link from "next/link";
 import { HiPencilAlt } from "react-icons/hi";
 import axios from "axios";
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
 const getTopics = async () => {
   try {

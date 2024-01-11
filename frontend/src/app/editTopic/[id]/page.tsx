@@ -1,7 +1,7 @@
 import EditTopicForm from "@/components/EditTopicForm";
 import axios from "axios";
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
 const getTopicById = async (id: any) => {
   try {
@@ -21,7 +21,7 @@ const getTopicById = async (id: any) => {
   }
 };
 
-const editTopic = async ({ params }) => {
+const editTopic = async ({ params }: any) => {
   const { id } = params;
 
   const topic = await getTopicById(id);
