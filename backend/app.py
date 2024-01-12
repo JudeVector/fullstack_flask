@@ -117,3 +117,7 @@ def delete_topic(id):
         return make_response(
             jsonify({"message": "Internal Server Error", "error": str(e)}), 500
         )
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=4000)
