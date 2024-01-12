@@ -4,7 +4,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
 
 const EditTopicForm = ({ id, title, description }: any) => {
   const [newTitle, setNewTitle] = useState(title);
@@ -30,15 +30,15 @@ const EditTopicForm = ({ id, title, description }: any) => {
       );
 
       if (res.status === 200) {
-        router.push("/");
-        router.refresh();
+        router.replace("/"); // Use replace instead of push
       } else {
-        throw new Error("Failed to create a topic");
+        throw new Error("Failed to update the topic");
       }
     } catch (error) {
-      console.error("Error creating a topic", error);
+      console.error("Error updating the topic", error);
     }
   };
+
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-3">
       <input

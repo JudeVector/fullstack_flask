@@ -1,30 +1,39 @@
-import React, { useEffect } from "react";
-import RemoveBtn from "./RemoveBtn";
+import React, { useEffect, useState } from "react";
+import RemoveBtn from "@/components/RemoveBtn";
 import Link from "next/link";
 import { HiPencilAlt } from "react-icons/hi";
 import axios from "axios";
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
 
-const getTopics = async () => {
-  try {
-    const res = await axios.get(`${apiUrl}/api/v1/topics`, {
-      headers: { "Cache-Control": "no-store" },
-    });
+const TopicsList = () => {
+  const [topics, setTopics] = useState([]);
 
-    return res.data;
-  } catch (error) {
-    console.error("Error loading topics", error);
-    throw error;
-  }
-};
+  const getTopics = async () => {
+    try {
+      const res = await axios.get(`${apiUrl}/api/v1/topics`, {
+        headers: { "Cache-Control": "no-store" },
+      });
 
-const TopicsList = async () => {
-  const data = await getTopics();
+      return res.data;
+    } catch (error) {
+      console.error("Error loading topics", error);
+      throw error;
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await getTopics();
+      setTopics(data);
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <>
-      {data.map((topic: any) => (
+      {topics.map((topic: any) => (
         <div
           key={topic.id}
           className="p-4 border border-slate-300 my-3 flex justify-between gap-5 items-start"

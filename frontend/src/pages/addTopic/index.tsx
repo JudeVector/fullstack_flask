@@ -4,7 +4,8 @@ import axios from "axios";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+
 const addTopic = () => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [title, setTitle] = useState("");
@@ -37,8 +38,7 @@ const addTopic = () => {
       );
 
       if (res.status === 201) {
-        router.push("/");
-        router.refresh();
+        router.replace("/");
       } else {
         throw new Error("Failed to create a topic");
       }
