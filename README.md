@@ -21,7 +21,7 @@ Welcome to my creation! This dynamic web application combines the robustness of 
 
 ## Introduction
 
-This full-stack web application that combines the power of Flask, PostgreSQL, and Next.js. It's designed for developers who crave a seamless integration of backend and frontend technologies.
+This is a full-stack web application that combines the power of Flask, PostgreSQL, and Next.js. It's designed for developers who crave a seamless integration of backend and frontend technologies.
 
 ## Features
 
